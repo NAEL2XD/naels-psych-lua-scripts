@@ -1,1 +1,2 @@
 COOKIE CLICKER IN FNF YEAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+Also it's in https://github.com/NAEL2XD/cookie-clicker-psych-edition
