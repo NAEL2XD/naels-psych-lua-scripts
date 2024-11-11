@@ -1,0 +1,1 @@
+Basically tracks on how much notes are left. Just simple.

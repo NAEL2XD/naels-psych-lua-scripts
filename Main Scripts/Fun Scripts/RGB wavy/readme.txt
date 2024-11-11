@@ -1,0 +1,1 @@
+Just a simple RGB wavy effect, that's it. I only made it for fun.

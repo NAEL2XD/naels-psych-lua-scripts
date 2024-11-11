@@ -1,0 +1,1 @@
+Just a cheating script, but it closes itself if timer has hit.

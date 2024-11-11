@@ -1,0 +1,4 @@
+go party with it!
+
+value 1: enable? (1= yes, any= no)
+value 2: {how much until beat, how much flash}
