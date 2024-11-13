@@ -2,7 +2,7 @@
 
 local imagePath = 'smeg'  -- Found in mods/images
 local easeType = 'backOut' -- https://api.haxeflixel.com/flixel/tweens/FlxEase.html
-local isBf = false  --playsAsBF()        -- Do you want your image to be bf?
+local isBf = true  --playsAsBF()        -- Do you want your image to be bf?
 
 --
 
