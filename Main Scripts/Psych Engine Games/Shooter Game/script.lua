@@ -13,6 +13,10 @@ local enemySpawn = 0
 local textSpawn = 0
 local opti = ""
 
+-- Kind of getting rid of the lag
+local pewRemoved = 1
+local enemyRemoved = 1
+
 function onCreatePost()
     -- We don't want that
     setProperty("camHUD.alpha", 0)
@@ -42,8 +46,8 @@ function onUpdate(elapsed)
         end
 
         -- Enemy Behavior (they hit you)
-        for i=1, enemySpawn do
-            for ii=1, pewSpawn do
+        for i=enemyRemoved, enemySpawn do
+            for ii=pewRemoved, pewSpawn do
                 if objectsOverlap("enemy"..i, "pew"..ii) then
                     sessionCombo = sessionCombo + 1
                     incrementScore(10*sessionCombo, {getProperty("enemy"..i..".x"), getProperty("enemy"..i..".y")})
@@ -101,6 +105,7 @@ end
 
 function onTimerCompleted(tag, loops, loopsLeft)
     if tag == "backsible" then isInvisible = false end
+    if stringStartsWith(tag, "insER") then enemyRemoved = enemyRemoved + 1 end
     if tag == "swoosh" then
         opti = "woosh"..swooshSpawn
         swooshSpawn = swooshSpawn + 1
@@ -111,15 +116,17 @@ function onTimerCompleted(tag, loops, loopsLeft)
     if tag == "enemySpawn" then
         enemySpawn = enemySpawn + 1
         opti = 'enemy'..enemySpawn
+        local length = getRandomFloat(10, 15)
         spriteMake(opti, getRandomFloat(0, 1232), -100, 48, 48, "676700")
-        doTweenY(opti, opti, 1200, getRandomFloat(10, 15), "linear")
-        runTimer("enemySpawn", getRandomFloat(1.25, 2), 1)
+        doTweenY(opti, opti, 1200, length, "linear")
+        runTimer("enemySpawn", getRandomFloat(1,2), 1)
+        runTimer("insER"..enemySpawn, length)
     end
 end
 
 function onTweenCompleted(tag)
     if luaSpriteExists(tag) then
-        if stringStartsWith(tag, "pew") then sessionCombo = 0 end
+        if stringStartsWith(tag, "pew") then sessionCombo = 0; pewRemoved = pewRemoved + 1 end
         removeLuaSprite(tag)
     elseif luaTextExists(tag) then
         removeLuaText(tag)
