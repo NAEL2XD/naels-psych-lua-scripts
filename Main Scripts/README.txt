@@ -6,3 +6,4 @@ Which Folder do you wanna go in?
 - HUDS: Yeah, you hear that? I also make huds too! 
 - Events: For all your event needs.
 - Cancelled Scripts: Scripts was suppose to be finished but was cancelled instead
+- Obscure: Scripts that were made and then was forgotten a long time being Obscured
