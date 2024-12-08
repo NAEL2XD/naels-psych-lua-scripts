@@ -4,6 +4,7 @@ local gamePlay = {
     losses = 0,
     winstreak = 0,
     maxwinstreak = 0,
+    wlratio = 0,
     hitRoom = 0,
     hitFreeplay = 0,
     records = {}
@@ -44,6 +45,7 @@ function onCreatePost()
             {"losses", "Total Losses", false},
             {"winstreak", "Current Winstreak", false},
             {"maxwinstreak", "Max Winstreak", false},
+            {"wlratio", "Win/Lose Ratio", false},
             {"hitRoom", "Total Hits (On Room)", false},
             {"hitFreeplay","Total Hits (On Solo)", true}
         }
@@ -83,7 +85,7 @@ function onCreatePost()
             end
         end
 
-        fastMake('text', 'nostuff', nil, nil, 910)
+        fastMake('text', 'nostuff', nil, nil, 985)
         screenCenter("nostuff")
         setTextSize("nostuff", 40)
         if #gamePlay.records == 0 then
@@ -91,60 +93,60 @@ function onCreatePost()
         else
             setTextString("nostuff", "Room Player Activity")
             
-            fastMake('graphic', 'nothingBlack0', nil, nil, 966, 968, 40, "000000")
+            fastMake('graphic', 'nothingBlack0', nil, nil, 1041, 968, 40, "000000")
             screenCenter("nothingBlack0")
 
-            fastMake('graphic', 'header', nil, nil, 970, 960, 32, "313131")
+            fastMake('graphic', 'header', nil, nil, 1045, 960, 32, "313131")
             screenCenter("header")
 
-            fastMake('text', 'whoWIN', nil, -325, 970)
+            fastMake('text', 'whoWIN', nil, -325, 1045)
             setTextString("whoWIN", "PLAYER")
             setTextSize("whoWIN", 28)
 
-            fastMake('text', 'whoJudge', nil, 0, 970)
+            fastMake('text', 'whoJudge', nil, 0, 1045)
             setTextString("whoJudge", "WAS WON?")
             setTextSize("whoJudge", 28)
 
-            fastMake('text', 'whoMuch', nil, 325, 970)
+            fastMake('text', 'whoMuch', nil, 325, 1045)
             setTextString("whoMuch", "BY %?")
             setTextSize("whoMuch", 28)
 
             for i=#gamePlay.records,1,-1 do
                 o = 'nothingBlack6'..i
-                fastMake('graphic', o, nil, nil, 966+(34*i), 968, 40, "000000")
+                fastMake('graphic', o, nil, nil, 1041+(34*i), 968, 40, "000000")
                 screenCenter(o)
-
+        
                 o = 'border'..i
-                fastMake('graphic', o, nil, nil, 970+(34*i), 960, 32, (i % 2 == 0 and "8e8c8e" or "bdbcbd"))
+                fastMake('graphic', o, nil, nil, 1045+(34*i), 960, 32, (i % 2 == 0 and "8e8c8e" or "bdbcbd"))
                 screenCenter(o)
-
+        
                 o = 'guy'..i
-                fastMake('text', o, nil, 160, 970+(34*i))
+                fastMake('text', o, nil, 160, 1045+(34*i))
                 setTextAlignment(o, "left")
                 setTextString(o, gamePlay.records[i][1])
                 setTextSize(o, 32)
                 setTextColor(o, "202020")
-
+        
                 o = 'win'..i
-                fastMake('text', o, nil, 480, 970+(34*i))
+                fastMake('text', o, nil, 480, 1045+(34*i))
                 setTextAlignment(o, "left")
                 setTextString(o, (gamePlay.records[i][2] and "Yes" or "No"))
                 setTextSize(o, 32)
                 setTextColor(o, "202020")
-
+        
                 o = 'acc'..i
-                fastMake('text', o, nil, 805, 970+(34*i))
+                fastMake('text', o, nil, 805, 1045+(34*i))
                 setTextAlignment(o, "left")
                 setTextString(o, gamePlay.records[i][3].."%")
                 setTextSize(o, 32)
                 setTextColor(o, "202020")
             end
-
-            yScrollLimit = 334+(34*#gamePlay.records)
-
-            fastMake('graphic', 'lengthingTile1', nil, 475, 1002, 4, 34*#gamePlay.records, "202020")
-            fastMake('graphic', 'lengthingTile2', nil, 800, 1002, 4, 34*#gamePlay.records, "202020")
-
+        
+            yScrollLimit = 409+(34*#gamePlay.records)
+        
+            fastMake('graphic', 'lengthingTile1', nil, 475, 1077, 4, 34*#gamePlay.records, "202020")
+            fastMake('graphic', 'lengthingTile2', nil, 800, 1077, 4, 34*#gamePlay.records, "202020")
+        
             for i=1,#moveables do
                 setProperty(moveables[i][1]..".y", moveables[i][2])
             end
@@ -155,10 +157,11 @@ end
 function onUpdate(elapsed)
     if songName == "online-stats" then
         if keyboardJustPressed("E") then exitSong(true) end
+        if keyboardJustPressed("R") then restartSong(true) end
         if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
-            yScroll = yScroll + 10
+            yScroll = yScroll + (10+(#gamePlay.records/8))/(framerate/60)
         elseif keyboardPressed("S") or keyboardPressed("DOWN") then
-            yScroll = yScroll - 10
+            yScroll = yScroll - (10+(#gamePlay.records/8))/(framerate/60)
         end
         if yScroll >= 0 then
             yScroll = 0
@@ -199,6 +202,7 @@ function onEndSong()
                 gamePlay.maxwinstreak = gamePlay.winstreak
             end
             gamePlay.hitRoom = gamePlay.hitRoom + hits
+            gamePlay.wlratio = gamePlay.wins / gamePlay.losses
         else
             gamePlay.hitFreeplay = gamePlay.hitFreeplay + hits
         end
