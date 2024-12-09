@@ -147,14 +147,14 @@ function onCreatePost()
             spawny = 515+(78*#make)
             setTextString("nostuff", "Room Player Activity")
 
-            fastMake('graphic', 'makeRecords', nil, nil, spawny, 620, 72, "FF0000")
+            fastMake('graphic', 'makeRecords', nil, nil, spawny-70, 620, 72, "FF0000")
             screenCenter("makeRecords")
 
-            fastMake('text', 'textMake', nil, 0, spawny+12.5)
+            fastMake('text', 'textMake', nil, 0, spawny-75+12.5)
             setTextSize("textMake", 32)
             setTextString("textMake", "Get Player Activity (Will Lag)")
 
-            fastMake('text', 'textMaClick', nil, 0, spawny+40)
+            fastMake('text', 'textMaClick', nil, 0, spawny-75+40)
             setTextSize("textMaClick", 24)
             setTextString("textMaClick", "Click Me!")
 
@@ -169,7 +169,7 @@ function onUpdate(elapsed)
     if songName == "online-stats" then
         setProperty("pointer.x", getMouseX("other")); setProperty("pointer.y", getMouseY("other"))
         if keyboardJustPressed("E") then exitSong(true) end
-        --if keyboardJustPressed("R") then restartSong(true) end
+        if keyboardJustPressed("R") then restartSong(true) end
         if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
             yScroll = yScroll + (10+(#gamePlay.records/8))/(framerate/60)
         elseif keyboardPressed("S") or keyboardPressed("DOWN") then
@@ -197,15 +197,18 @@ function onEndSong()
             local user, win, accu, own = "", false, 0, hasRoomPerms()
             if own then
                 accu = math.abs(getPlayerAccuracy(1) - getPlayerAccuracy(2))
-                win = (getPlayerAccuracy(1) - getPlayerAccuracy(2) <= 0 and false or true)
+                win = getPlayerAccuracy(1) - getPlayerAccuracy(2) >= 0
                 user = getPlayerName(2)
             else
                 accu = math.abs(getPlayerAccuracy(2) - getPlayerAccuracy(1))
-                win = (getPlayerAccuracy(2) - getPlayerAccuracy(1) <= 0 and false or true)
+                win = getPlayerAccuracy(2) - getPlayerAccuracy(1) >= 0
                 user = getPlayerName(1)
             end
-            table.insert(gamePlay.records, {user, win, accu})
-            if win then
+            table.insert(gamePlay.records, {user, win, string.format("%.2f%%", (accu))})
+            if #gamePlay.records == 16 then
+                gamePlay.records[1] = nil
+            end
+            if win == 1 then
                 gamePlay.wins = gamePlay.wins + 1; gamePlay.winstreak = gamePlay.winstreak + 1
             else
                 gamePlay.winstreak = 0; gamePlay.losses = gamePlay.losses + 1
