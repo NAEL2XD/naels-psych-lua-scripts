@@ -213,7 +213,7 @@ function onEndSong()
             if #gamePlay.records == 16 then
                 table.remove(gamePlay.records, 1)
             end
-            if win == 1 then
+            if win == true then
                 gamePlay.wins = gamePlay.wins + 1; gamePlay.winstreak = gamePlay.winstreak + 1
             else
                 gamePlay.winstreak = 0; gamePlay.losses = gamePlay.losses + 1
