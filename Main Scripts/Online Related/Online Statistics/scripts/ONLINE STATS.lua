@@ -23,7 +23,7 @@ local make = {
     {"maxwinstreak", "Max Winstreak"         },
     {"wlratio",      "Win/Lose Ratio"        },
     {"hitRoom",      "Total Hits (On Room)"  },
-    {"hitFreeplay",  "Total Hits (On Solo)",   true},
+    {"hitFreeplay",  "Total Hits (On Solo)", true},
     {"hitTotal",     "Total Hits All-Time"   },
     {"ttp",          "Time Played"           },
     {"songPlays",    "Total Song Plays"      },
@@ -88,6 +88,12 @@ function onCreatePost()
             gamePlay.ttp = gamePlay.ttp..things[i][1]..things[i][3]
         end
 
+        if #gamePlay.records >= 15 then
+            repeat
+                table.remove(gamePlay.records, 1)
+            until #gamePlay.records <= 15
+        end
+
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
         gamePlay.hitTotal = gamePlay.hitRoom + gamePlay.hitFreeplay
 
@@ -132,14 +138,19 @@ function onCreatePost()
         spawny = 435+(75*#make)
         yScrollLimit = spawny-600
 
-        fastMake('text', 'nostuff', nil, nil, spawny)
+        fastMake('text', 'nostuff', nil, nil, spawny-25)
         screenCenter("nostuff")
         setTextSize("nostuff", 40)
         if #gamePlay.records == 0 then
-            setTextString("nostuff", "Records was not found :(")
+            setTextString("nostuff", "Records was not found :(\nPlay with users to track records here.")
         else
             spawny = 515+(78*#make)
             setTextString("nostuff", "Room Player Activity")
+
+            fastMake('text', 'notice', nil, nil, spawny-97.5)
+            screenCenter("notice")
+            setTextString("notice", "It will get 15 activities max! The oldest one will be removed to prevent lag.")
+            setTextSize('notice', 22)
 
             fastMake('graphic', 'makeRecords', nil, nil, spawny-70, 620, 72, "FF0000")
             screenCenter("makeRecords")
@@ -200,7 +211,7 @@ function onEndSong()
             end
             table.insert(gamePlay.records, {user, win, string.format("%.2f%%", (accu))})
             if #gamePlay.records == 16 then
-                gamePlay.records[1] = nil
+                table.remove(gamePlay.records, 1)
             end
             if win == 1 then
                 gamePlay.wins = gamePlay.wins + 1; gamePlay.winstreak = gamePlay.winstreak + 1
