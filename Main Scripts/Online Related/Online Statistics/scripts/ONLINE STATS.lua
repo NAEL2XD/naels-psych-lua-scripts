@@ -68,32 +68,26 @@ function onCreatePost()
         setTextString("general", "Online Stats")
         setTextSize("general", 48)
 
-        local seconds, minutes, hours = 0,0,0
         local timePlayed = gamePlay.timePlayed
-        gamePlay.wlratio = gamePlay.wins / (gamePlay.losses+1)
+        gamePlay.wlratio = string.format('%.2f', gamePlay.wins / (gamePlay.losses == 0 and 1 or gamePlay.losses))
 
-        if timePlayed >= 3600 then
-            repeat
-                hours = hours + 1
-                timePlayed = timePlayed - 3600
-            until timePlayed <= 3600
+        local things = {
+            {0, 3600, "h "},
+            {0, 60, "m "},
+            {0, 1, "s"}
+        }
+
+        gamePlay.ttp = ""
+        for i=1,#things do
+            if timePlayed >= things[i][2] then
+                repeat
+                    things[i][1] = things[i][1] + 1
+                    timePlayed = timePlayed - things[i][2]
+                until timePlayed <= things[i][2]
+            end
+            gamePlay.ttp = gamePlay.ttp..things[i][1]..things[i][3]
         end
 
-        if timePlayed >= 60 then
-            repeat
-                minutes = minutes + 1
-                timePlayed = timePlayed - 60
-            until timePlayed <= 60
-        end
-        
-        if timePlayed >= 1 then
-            repeat
-                seconds = seconds + 1
-                timePlayed = timePlayed - 1
-            until timePlayed <= 0
-        end
-
-        gamePlay.ttp = hours.."h "..minutes.."m "..seconds.."s"
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
         gamePlay.hitTotal = gamePlay.hitRoom + gamePlay.hitFreeplay
 
@@ -284,7 +278,7 @@ function createRecords()
         o = 'acc'..i
         fastMake('text', o, nil, 805, (spawny+4)+(34*i))
         setTextAlignment(o, "left")
-        setTextString(o, gamePlay.records[i][3].."%")
+        setTextString(o, gamePlay.records[i][3])
         setTextSize(o, 32)
         setTextColor(o, "202020")
     end
