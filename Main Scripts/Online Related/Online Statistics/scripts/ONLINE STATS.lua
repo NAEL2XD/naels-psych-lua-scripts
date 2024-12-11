@@ -1,14 +1,17 @@
 local gamePlay = {
+    songroom = 0,
     wins = 0,
     losses = 0,
     winstreak = 0,
     maxwinstreak = 0,
     wlratio = 0,
+    wlpercent = "",
     hitRoom = 0,
     hitFreeplay = 0,
     hitTotal = 0,
     timePlayed = 0,
     ttp = "",
+    songFreeplay = 0,
     songPlays = 0,
     fc = 0,
     pfc = 0,
@@ -17,17 +20,20 @@ local gamePlay = {
 }
 local moveables = {}
 local make = {
-    {"wins",         "Total Wins"            },
-    {"losses",       "Total Losses"          },
-    {"winstreak",    "Current Winstreak"     },
-    {"maxwinstreak", "Max Winstreak"         },
-    {"wlratio",      "Win/Lose Ratio"        },
-    {"hitRoom",      "Total Hits (On Room)"  },
-    {"hitFreeplay",  "Total Hits (On Solo)", true},
-    {"hitTotal",     "Total Hits All-Time"   },
-    {"ttp",          "Time Played"           },
-    {"songPlays",    "Total Song Plays"      },
-    {"fcpfc",        "Total FC/PFC"          },
+    {"songroom",     "Total Song Plays (On Room)"},
+    {"wins",         "Total Wins"                },
+    {"losses",       "Total Losses"              },
+    {"winstreak",    "Current Winstreak"         },
+    {"maxwinstreak", "Max Winstreak"             },
+    {"wlratio",      "Win/Lose Ratio"            },
+    {"wlpercent",    "Win/Lose Percentage"       },
+    {"hitRoom",      "Total Hits (On Room)"      },
+    {"hitFreeplay",  "Total Hits (On Solo)",     true},
+    {"hitTotal",     "Total Hits All-Time"       },
+    {"ttp",          "Time Played"               },
+    {"songFreeplay", "Total Song Plays (On Solo)"},
+    {"songPlays",    "Total Song Plays All-Time" },
+    {"fcpfc",        "Total FC/PFC"              },
 }
 
 local yScroll = 0
@@ -69,7 +75,6 @@ function onCreatePost()
         setTextSize("general", 48)
 
         local timePlayed = gamePlay.timePlayed
-        gamePlay.wlratio = string.format('%.2f', gamePlay.wins / (gamePlay.losses == 0 and 1 or gamePlay.losses))
 
         local things = {
             {0, 3600, "h "},
@@ -95,7 +100,11 @@ function onCreatePost()
         end
 
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
+        gamePlay.wlratio = string.format('%.2f', gamePlay.wins / (gamePlay.losses == 0 and 1 or gamePlay.losses))
         gamePlay.hitTotal = gamePlay.hitRoom + gamePlay.hitFreeplay
+        gamePlay.songroom = gamePlay.wins + gamePlay.losses
+        gamePlay.songFreeplay =  gamePlay.songPlays - gamePlay.songroom
+        gamePlay.wlpercent = string.format('%.2f%%', (gamePlay.wins / gamePlay.songroom)*100)
 
         local o
         local wasPlayer = false
@@ -125,7 +134,7 @@ function onCreatePost()
             setProperty(o..".x", -140)
 
             for ii=1,33 do
-                o = "lengthThing"..i..ii
+                o = "lengthThingy"..i..ii
                 fastMake('graphic', o, nil, 0, (wasPlayer and 355 or 235)+(75*i), 1040+(2.5*ii), 6, "FFFFFF")
                 setProperty(o..".alpha", 0.033)
                 screenCenter(o)
@@ -136,7 +145,7 @@ function onCreatePost()
         end
 
         spawny = 435+(75*#make)
-        yScrollLimit = spawny-600
+        yScrollLimit = spawny-550
 
         fastMake('text', 'nostuff', nil, nil, spawny-25)
         screenCenter("nostuff")
@@ -147,19 +156,19 @@ function onCreatePost()
             spawny = 515+(78*#make)
             setTextString("nostuff", "Room Player Activity")
 
-            fastMake('text', 'notice', nil, nil, spawny-97.5)
+            fastMake('text', 'notice', nil, nil, spawny-100)
             screenCenter("notice")
             setTextString("notice", "It will get 15 activities max! The oldest one will be removed to prevent lag.")
             setTextSize('notice', 22)
 
-            fastMake('graphic', 'makeRecords', nil, nil, spawny-70, 620, 72, "FF0000")
+            fastMake('graphic', 'makeRecords', nil, nil, spawny-50, 620, 72, "FF0000")
             screenCenter("makeRecords")
 
-            fastMake('text', 'textMake', nil, 0, spawny-75+12.5)
+            fastMake('text', 'textMake', nil, 0, spawny-42.5)
             setTextSize("textMake", 32)
             setTextString("textMake", "Get Player Activity (Will Lag)")
 
-            fastMake('text', 'textMaClick', nil, 0, spawny-75+40)
+            fastMake('text', 'textMaClick', nil, 0, spawny-15)
             setTextSize("textMaClick", 24)
             setTextString("textMaClick", "Click Me!")
 
@@ -176,9 +185,9 @@ function onUpdate(elapsed)
         if keyboardJustPressed("E") then exitSong(true) end
         if keyboardJustPressed("R") then restartSong(true) end
         if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
-            yScroll = yScroll + (10+(#gamePlay.records/8))/(framerate/60)
+            yScroll = yScroll + (7.5+(#gamePlay.records/8))/(framerate/60)
         elseif keyboardPressed("S") or keyboardPressed("DOWN") then
-            yScroll = yScroll - (10+(#gamePlay.records/8))/(framerate/60)
+            yScroll = yScroll - (7.5+(#gamePlay.records/8))/(framerate/60)
         end
         if yScroll >= 0 then
             yScroll = 0
