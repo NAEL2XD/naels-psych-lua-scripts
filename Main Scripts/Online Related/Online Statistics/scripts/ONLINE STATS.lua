@@ -66,7 +66,7 @@ function onCreatePost()
 
         fastMake('text', 'scriptcredit', nil, nil, 80)
         screenCenter("scriptcredit")
-        setTextString("scriptcredit", "Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)")
+        setTextString("scriptcredit", "v1.0.0 - Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)\nPress ENTER to open Source Code")
         setTextBorder("scriptcredit", 2, "003300")
         setTextColor("scriptcredit", "00FF00")
 
@@ -183,11 +183,14 @@ function onUpdate(elapsed)
     if songName == "online-stats" then
         setProperty("pointer.x", getMouseX("other")); setProperty("pointer.y", getMouseY("other"))
         if keyboardJustPressed("E") then exitSong(true) end
-        if keyboardJustPressed("R") then restartSong(true) end
+        --if keyboardJustPressed("R") then restartSong(true) end
         if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
             yScroll = yScroll + (7.5+(#gamePlay.records/8))/(framerate/60)
         elseif keyboardPressed("S") or keyboardPressed("DOWN") then
             yScroll = yScroll - (7.5+(#gamePlay.records/8))/(framerate/60)
+        end
+        if keyboardJustPressed("ENTER") then
+            os.execute("start https://github.com/NAEL2XD/naels-psych-lua-scripts/tree/main/Main%20Scripts/Online%20Related/Online%20Statistics")
         end
         if yScroll >= 0 then
             yScroll = 0
@@ -209,15 +212,9 @@ function onEndSong()
         local room = isRoomConnected()
         if room then
             local user, win, accu, own = "", false, 0, hasRoomPerms()
-            if own then
-                accu = math.abs(getPlayerAccuracy(1) - getPlayerAccuracy(2))
-                win = getPlayerAccuracy(1) - getPlayerAccuracy(2) >= 0
-                user = getPlayerName(2)
-            else
-                accu = math.abs(getPlayerAccuracy(2) - getPlayerAccuracy(1))
-                win = getPlayerAccuracy(2) - getPlayerAccuracy(1) >= 0
-                user = getPlayerName(1)
-            end
+            accu = math.abs(getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)))
+            win = getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)) >= 0
+            user = getPlayerName((own and 2 or 1))
             table.insert(gamePlay.records, {user, win, string.format("%.2f%%", (accu))})
             if #gamePlay.records == 16 then
                 table.remove(gamePlay.records, 1)
