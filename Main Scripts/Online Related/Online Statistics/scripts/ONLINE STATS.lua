@@ -93,10 +93,10 @@ function onCreatePost()
             gamePlay.ttp = gamePlay.ttp..things[i][1]..things[i][3]
         end
 
-        if #gamePlay.records >= 15 then
+        if #gamePlay.records >= 16 then
             repeat
                 table.remove(gamePlay.records, 1)
-            until #gamePlay.records <= 15
+            until #gamePlay.records <= 16
         end
 
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
@@ -113,7 +113,7 @@ function onCreatePost()
             if not wasPlayer and isPlayerRelated then
                 fastMake('text', 'NotRelated', nil, 0, 240+(75*i))
                 setTextSize('NotRelated', 48)
-                setTextString('NotRelated', "Player Stats")
+                setTextString('NotRelated', "Offline Stats")
                 setProperty(o..".x", 140)
 
                 wasPlayer = true
@@ -214,9 +214,9 @@ function onEndSong()
             local user, win, accu, own = "", false, 0, hasRoomPerms()
             accu = math.abs(getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)))
             win = getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)) >= 0
-            user = getPlayerName((own and 2 or 1))
+            user = getPlayerName((own and 2 or 1)); user = (user == "" and "User Not Found" or user)
             table.insert(gamePlay.records, {user, win, string.format("%.2f%%", (accu))})
-            if #gamePlay.records == 16 then
+            if #gamePlay.records == 17 then
                 table.remove(gamePlay.records, 1)
             end
             if win == true then
