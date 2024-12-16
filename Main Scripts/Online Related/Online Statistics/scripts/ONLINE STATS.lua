@@ -66,7 +66,7 @@ function onCreatePost()
 
         fastMake('text', 'scriptcredit', nil, nil, 80)
         screenCenter("scriptcredit")
-        setTextString("scriptcredit", "v1.0.0 - Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)\nPress ENTER to open Source Code")
+        setTextString("scriptcredit", "v1.0.1 - Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)\nPress ENTER to open Source Code")
         setTextBorder("scriptcredit", 2, "003300")
         setTextColor("scriptcredit", "00FF00")
 
@@ -219,7 +219,7 @@ function onEndSong()
             if #gamePlay.records == 17 then
                 table.remove(gamePlay.records, 1)
             end
-            if win == true then
+            if win then
                 gamePlay.wins = gamePlay.wins + 1; gamePlay.winstreak = gamePlay.winstreak + 1
             else
                 gamePlay.winstreak = 0; gamePlay.losses = gamePlay.losses + 1
