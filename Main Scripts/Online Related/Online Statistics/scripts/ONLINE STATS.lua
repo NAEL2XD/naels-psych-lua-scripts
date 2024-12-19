@@ -241,7 +241,7 @@ function onUpdate(elapsed)
                 doTweenAlpha("shit3", "playerInfo", 0.8, 0.5, "linear")
 
                 fastMake('text', 'roomInfo', nil, 0, 350)
-                setTextSize("roomInfo", 40)
+                setTextSize("roomInfo", 32)
                 setProperty("roomInfo.alpha", 0)
                 doTweenAlpha("shit4", "roomInfo", 0.8, 0.5, "linear")
 
@@ -352,7 +352,7 @@ function onEndSong()
                     getPlayerName(i),
                     getPlayerScore(i),
                     getPlayerMisses(i),
-                    getPlayerAccuracy(i),
+                    string.format('%.2f%%', getPlayerAccuracy(i)),
                     getPlayerSicks(i),
                     getPlayerGoods(i),
                     getPlayerBads(i),
