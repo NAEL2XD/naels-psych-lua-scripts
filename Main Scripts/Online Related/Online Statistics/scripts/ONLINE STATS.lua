@@ -102,9 +102,6 @@ function onCreatePost()
                 until #gamePlay[qsdfohi[i]] <= 16
             end
         end
-        
-        debugPrint(#gamePlay.roomData)
-        debugPrint(#gamePlay.records)
 
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
         gamePlay.wlratio = string.format('%.2f', gamePlay.wins / (gamePlay.losses == 0 and 1 or gamePlay.losses))
