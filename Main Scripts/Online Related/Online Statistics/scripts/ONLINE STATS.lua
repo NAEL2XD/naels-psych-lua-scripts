@@ -16,7 +16,8 @@ local gamePlay = {
     fc = 0,
     pfc = 0,
     fcpfc = "",
-    records = {}
+    records = {},
+    roomData = {},
 }
 local moveables = {}
 local make = {
@@ -41,9 +42,9 @@ local yScrollLimit = 0
 local spawny = 0
 
 function onCreatePost()
-    initSaveData('POnlineStats')
+    initSaveData('POStats')
     for k, v in pairs(gamePlay) do
-        gamePlay[k] = getDataFromSave('POnlineStats', k, v)
+        gamePlay[k] = getDataFromSave('POStats', k, v)
     end
 
     if songName == "online-stats" then
@@ -93,17 +94,23 @@ function onCreatePost()
             gamePlay.ttp = gamePlay.ttp..things[i][1]..things[i][3]
         end
 
-        if #gamePlay.records >= 16 then
-            repeat
-                table.remove(gamePlay.records, 1)
-            until #gamePlay.records <= 16
+        local qsdfohi = {"records", "roomData"}
+        for i=1, #qsdfohi do
+            if #gamePlay[qsdfohi[i]] >= 16 then
+                repeat
+                    table.remove(gamePlay[qsdfohi[i]], 1)
+                until #gamePlay[qsdfohi[i]] <= 16
+            end
         end
+        
+        debugPrint(#gamePlay.roomData)
+        debugPrint(#gamePlay.records)
 
         gamePlay.fcpfc = gamePlay.fc.."/"..gamePlay.pfc
         gamePlay.wlratio = string.format('%.2f', gamePlay.wins / (gamePlay.losses == 0 and 1 or gamePlay.losses))
         gamePlay.hitTotal = gamePlay.hitRoom + gamePlay.hitFreeplay
         gamePlay.songroom = gamePlay.wins + gamePlay.losses
-        gamePlay.songFreeplay =  gamePlay.songPlays - gamePlay.songroom
+        gamePlay.songFreeplay = gamePlay.songPlays - gamePlay.songroom
         gamePlay.wlpercent = string.format('%.2f%%', (gamePlay.wins / gamePlay.songroom)*100)
 
         local o
@@ -178,32 +185,160 @@ function onCreatePost()
 end
 
 local thing = 0.0
+local enteredRoomData = false
+local madeFirst = false
+local aboutToLeave = false
+local whichChosen = 0
 function onUpdate(elapsed)
     thing = thing + elapsed
     if songName == "online-stats" then
         setProperty("pointer.x", getMouseX("other")); setProperty("pointer.y", getMouseY("other"))
-        if keyboardJustPressed("E") then exitSong(true) end
-        --if keyboardJustPressed("R") then restartSong(true) end
-        if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
-            yScroll = yScroll + (7.5+(#gamePlay.records/8))/(framerate/60)
-        elseif keyboardPressed("S") or keyboardPressed("DOWN") then
-            yScroll = yScroll - (7.5+(#gamePlay.records/8))/(framerate/60)
+        if keyboardJustPressed("R") then restartSong(true) end
+        if not enteredRoomData then
+            if keyboardJustPressed("ENTER") then
+                os.execute("start https://github.com/NAEL2XD/naels-psych-lua-scripts/tree/main/Main%20Scripts/Online%20Related/Online%20Statistics")
+            end
+            if yScroll >= 0 then
+                yScroll = 0
+            elseif yScroll <= -yScrollLimit then
+                yScroll = -yScrollLimit
+            end
+            if keyboardJustPressed("E") then exitSong(true) end
+            if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
+                yScroll = yScroll + (7.5+(#gamePlay.records/8))/(framerate/60)
+            elseif keyboardPressed("S") or keyboardPressed("DOWN") then
+                yScroll = yScroll - (7.5+(#gamePlay.records/8))/(framerate/60)
+            end
+            if objectsOverlap("pointer", "makeRecords") and mouseClicked() then
+                createRecords()
+                removeLuaSprite("makeRecords")
+                removeLuaText("textMake")
+                removeLuaText("textMaClick")
+            end
+            for i=1, 15 do
+                if objectsOverlap("pointer", "border"..i) and mouseClicked() then
+                    enteredRoomData = true
+                    madeFirst = false
+                    whichChosen = i+1
+                    break
+                end
+            end
+            updatePosition()
+        else
+            if not madeFirst then
+                makeLuaSprite('blackingThem', "", 0, 0)
+                makeGraphic('blackingThem', 1920, 1080, "000000")
+                addLuaSprite('blackingThem', true)
+                setObjectCamera("blackingThem", "other")
+                setProperty("blackingThem.alpha", 0)
+                doTweenAlpha("shit", "blackingThem", 0.8, 0.5, "linear")
+
+                fastMake('text', 'oppoInfo', nil, 20, 40)
+                setTextSize("oppoInfo", 32)
+                setTextAlignment("oppoInfo", "left")
+                setProperty("oppoInfo.alpha", 0)
+                doTweenAlpha("shit2", "oppoInfo", 0.8, 0.5, "linear")
+
+                fastMake('text', 'playerInfo', nil, -20, 40)
+                setTextSize("playerInfo", 32)
+                setTextAlignment("playerInfo", "right")
+                setProperty("playerInfo.alpha", 0)
+                doTweenAlpha("shit3", "playerInfo", 0.8, 0.5, "linear")
+
+                fastMake('text', 'roomInfo', nil, 0, 350)
+                setTextSize("roomInfo", 40)
+                setProperty("roomInfo.alpha", 0)
+                doTweenAlpha("shit4", "roomInfo", 0.8, 0.5, "linear")
+
+                makeLuaSprite('leavelol', "", 0, 0)
+                makeGraphic('leavelol', 360, 90, "FF0000")
+                addLuaSprite('leavelol', true)
+                setObjectCamera("leavelol", "other")
+                screenCenter("leavelol")
+                setProperty("leavelol.y", 625)
+                setProperty("leavelol.alpha", 0)
+                doTweenAlpha("shit5", "leavelol", 0.8, 0.5, "linear")
+
+                fastMake('text', 'closeButton', nil, 0, 650)
+                setTextSize("closeButton", 40)
+                setTextString("closeButton", "Close Data")
+                setProperty("closeButton.alpha", 0)
+                doTweenAlpha("shit6", "closeButton", 0.8, 0.5, "linear")
+
+                local stuffNames = {
+                    {
+                        "Name",
+                        "Score",
+                        "Misses",
+                        "Accuracy (%)",
+                        "Sicks",
+                        "Goods",
+                        "Bads",
+                        "Shits",
+                        "Skin Name"
+                    },
+                    {
+                        "ID",
+                        "Owner",
+                        "Perms",
+                        "Song Name",
+                        "Mod Name",
+                        "Mod Link"
+                    }
+                }
+                if gamePlay.roomData[whichChosen] == nil then
+                    setTextString("roomInfo", "Sorry, room data was not found!")
+                    setTextSize("roomInfo", 52)
+                    screenCenter("roomInfo")
+                else
+                    local isCorrupt = false
+                    saveFile("debug.txt", gamePlay.roomData)
+                    for i=1, 3 do
+                        if gamePlay.roomData[whichChosen][i] == nil then
+                            isCorrupt = true
+                        end
+                    end
+                    if not isCorrupt then
+                        local wower = {"oppoInfo", 'playerInfo', 'roomInfo'}
+                        local things = {"Opponent ", "Player ", "Room "}
+                        for i=1, 3 do
+                            local txt = ""
+                            for ii=1, #stuffNames[i <= 2 and 1 or 2] do
+                                txt = txt..tostring(things[i]..stuffNames[i <= 2 and 1 or 2][ii]..": "..tostring(gamePlay.roomData[whichChosen][i][ii]).."\n")
+                            end
+                            setTextString(wower[i], txt)
+                        end
+                    else
+                        setTextString('roomInfo', "Room Data is Not Found or is Corrupted.")
+                        setTextSize("roomInfo", 52)
+                        screenCenter("roomInfo")
+                    end
+                end
+
+                madeFirst = true
+                aboutToLeave = false
+            end
+            if objectsOverlap("pointer", "leavelol") and mouseClicked() and not aboutToLeave then
+                local stuffToDel = {"blackingThem", "oppoInfo", "playerInfo", "roomInfo", "leavelol", "closeButton"}
+                aboutToLeave = true
+                for i=1, #stuffToDel do
+                    doTweenAlpha("byeInfo"..i, stuffToDel[i], 0, 0.33, "linear")
+                end
+            end
         end
-        if keyboardJustPressed("ENTER") then
-            os.execute("start https://github.com/NAEL2XD/naels-psych-lua-scripts/tree/main/Main%20Scripts/Online%20Related/Online%20Statistics")
+    end
+end
+
+function onTweenCompleted(tag)
+    if tag == "byeInfo1" then
+        madeFirst = false
+        enteredRoomData = false
+        local stuffToDel = {"blackingThem", "oppoInfo", "playerInfo", "roomInfo", "leavelol", "closeButton"}
+        for i=1, 6 do
+            cancelTween(stuffToDel[i])
+            removeLuaSprite(stuffToDel[i])
+            removeLuaText(stuffToDel[i])
         end
-        if yScroll >= 0 then
-            yScroll = 0
-        elseif yScroll <= -yScrollLimit then
-            yScroll = -yScrollLimit
-        end
-        if objectsOverlap("pointer", "makeRecords") and mouseClicked() then
-            createRecords()
-            removeLuaSprite("makeRecords")
-            removeLuaText("textMake")
-            removeLuaText("textMaClick")
-        end
-        updatePosition()
     end
 end
 
@@ -215,9 +350,35 @@ function onEndSong()
             accu = math.abs(getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)))
             win = getPlayerAccuracy((own and 1 or 2)) - getPlayerAccuracy((own and 2 or 1)) >= 0
             user = getPlayerName((own and 2 or 1)); user = (user == "" and "User Not Found" or user)
-            table.insert(gamePlay.records, {user, win, string.format("%.2f%%", (accu))})
+            table.insert(gamePlay.records, {user, win, string.format("%.2f%%", accu)})
+            local shit = {}
+            for i=1, 2 do
+                table.insert(shit, {
+                    getPlayerName(i),
+                    getPlayerScore(i),
+                    getPlayerMisses(i),
+                    getPlayerAccuracy(i),
+                    getPlayerSicks(i),
+                    getPlayerGoods(i),
+                    getPlayerBads(i),
+                    getPlayerShits(i),
+                    getPlayerSkinName(i),
+                })
+            end
+            table.insert(shit, {
+                gamePlay.wins + gamePlay.losses,
+                isRoomOwner(),
+                hasRoomPerms(),
+                songName.." ("..getStateSong()..")",
+                (getStateModDir() == nil and "Vanilla" or getStateModDir()),
+                (getStateModURL() == nil and "Vanilla" or getStateModURL()),
+            })
+            table.insert(gamePlay.roomData, shit)
             if #gamePlay.records == 17 then
                 table.remove(gamePlay.records, 1)
+            end
+            if #gamePlay.roomData == 17 then
+                table.remove(gamePlay.roomData, 1)
             end
             if win then
                 gamePlay.wins = gamePlay.wins + 1; gamePlay.winstreak = gamePlay.winstreak + 1
@@ -239,9 +400,9 @@ function onEndSong()
         gamePlay.timePlayed = math.floor(gamePlay.timePlayed + thing)
         gamePlay.songPlays = gamePlay.songPlays + 1
         for k, v in pairs(gamePlay) do
-            setDataFromSave('POnlineStats', k, v)
+            setDataFromSave('POStats', k, v)
         end
-        flushSaveData('POnlineStats')
+        flushSaveData('POStats')
     end
 end
 
@@ -261,7 +422,7 @@ function createRecords()
     setTextSize("whoWIN", 28)
 
     fastMake('text', 'whoJudge', nil, 0, spawny+4)
-    setTextString("whoJudge", "WAS WON?")
+    setTextString("whoJudge", "WON?")
     setTextSize("whoJudge", 28)
 
     fastMake('text', 'whoMuch', nil, 325, spawny+4)
@@ -269,7 +430,7 @@ function createRecords()
     setTextSize("whoMuch", 28)
 
     local o
-    for i=#gamePlay.records,1,-1 do
+    for i=1,#gamePlay.records do
         o = 'nothingBlack6'..i
         fastMake('graphic', o, nil, nil, spawny+(34*i), 968, 40, "000000")
         screenCenter(o)
