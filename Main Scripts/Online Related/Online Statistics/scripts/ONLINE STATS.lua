@@ -49,7 +49,6 @@ function onCreatePost()
 
     if songName == "online-stats" then
         setPropertyFromClass('flixel.FlxG', 'mouse.visible', true)
-        fastMake('graphic', 'pointer', nil, 0, 0, 0, 0)
         playMusic("freeplayRandom", 1, true)
         setProperty("camHUD.visible", false)
         setProperty("camGame.visible", false)
@@ -67,7 +66,7 @@ function onCreatePost()
 
         fastMake('text', 'scriptcredit', nil, nil, 80)
         screenCenter("scriptcredit")
-        setTextString("scriptcredit", "v1.0.1 - Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)\nPress ENTER to open Source Code")
+        setTextString("scriptcredit", "v2.0.0 - Script by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)\nPress ENTER to open Source Code")
         setTextBorder("scriptcredit", 2, "003300")
         setTextColor("scriptcredit", "00FF00")
 
@@ -160,9 +159,9 @@ function onCreatePost()
             spawny = 515+(78*#make)
             setTextString("nostuff", "Room Player Activity")
 
-            fastMake('text', 'notice', nil, nil, spawny-100)
+            fastMake('text', 'notice', nil, nil, spawny-112.5)
             screenCenter("notice")
-            setTextString("notice", "It will get 15 activities max! The oldest one will be removed to prevent lag.")
+            setTextString("notice", "It will get 15 activities max! The oldest one will be removed to prevent lag.\nClick on an activity to see Room Data!")
             setTextSize('notice', 22)
 
             fastMake('graphic', 'makeRecords', nil, nil, spawny-50, 620, 72, "FF0000")
@@ -189,7 +188,6 @@ local whichChosen = 0
 function onUpdate(elapsed)
     thing = thing + elapsed
     if songName == "online-stats" then
-        setProperty("pointer.x", getMouseX("other")); setProperty("pointer.y", getMouseY("other"))
         if keyboardJustPressed("R") then restartSong(true) end
         if not enteredRoomData then
             if keyboardJustPressed("ENTER") then
@@ -202,21 +200,21 @@ function onUpdate(elapsed)
             end
             if keyboardJustPressed("E") then exitSong(true) end
             if keyboardPressed("W") or keyboardPressed("Z") or keyboardPressed("UP") then
-                yScroll = yScroll + (7.5+(#gamePlay.records/8))/(framerate/60)
+                yScroll = yScroll + (13+(#gamePlay.records/8))/(framerate/60)
             elseif keyboardPressed("S") or keyboardPressed("DOWN") then
-                yScroll = yScroll - (7.5+(#gamePlay.records/8))/(framerate/60)
+                yScroll = yScroll - (13+(#gamePlay.records/8))/(framerate/60)
             end
-            if objectsOverlap("pointer", "makeRecords") and mouseClicked() then
+            if mouseOverlaps("makeRecords") and mouseClicked() then
                 createRecords()
                 removeLuaSprite("makeRecords")
                 removeLuaText("textMake")
                 removeLuaText("textMaClick")
             end
             for i=1, 15 do
-                if objectsOverlap("pointer", "border"..i) and mouseClicked() then
+                if mouseOverlaps("border"..i) and mouseClicked() then
                     enteredRoomData = true
                     madeFirst = false
-                    whichChosen = i+1
+                    whichChosen = i
                     break
                 end
             end
@@ -267,7 +265,7 @@ function onUpdate(elapsed)
                         "Name",
                         "Score",
                         "Misses",
-                        "Accuracy (%)",
+                        "Accuracy",
                         "Sicks",
                         "Goods",
                         "Bads",
@@ -275,9 +273,9 @@ function onUpdate(elapsed)
                         "Skin Name"
                     },
                     {
-                        "ID",
-                        "Owner",
-                        "Perms",
+                        "Room ID",
+                        "Is Room Owner",
+                        "Has Perms",
                         "Song Name",
                         "Mod Name",
                         "Mod Link"
@@ -297,7 +295,7 @@ function onUpdate(elapsed)
                     end
                     if not isCorrupt then
                         local wower = {"oppoInfo", 'playerInfo', 'roomInfo'}
-                        local things = {"Opponent ", "Player ", "Room "}
+                        local things = {"Opponent ", "Player ", ""}
                         for i=1, 3 do
                             local txt = ""
                             for ii=1, #stuffNames[i <= 2 and 1 or 2] do
@@ -315,7 +313,7 @@ function onUpdate(elapsed)
                 madeFirst = true
                 aboutToLeave = false
             end
-            if objectsOverlap("pointer", "leavelol") and mouseClicked() and not aboutToLeave then
+            if mouseOverlaps("leavelol") and mouseClicked() and not aboutToLeave then
                 local stuffToDel = {"blackingThem", "oppoInfo", "playerInfo", "roomInfo", "leavelol", "closeButton"}
                 aboutToLeave = true
                 for i=1, #stuffToDel do
@@ -491,4 +489,15 @@ function fastMake(which, tag, name, x, y, width, height, color)
         setTextBorder(tag)
     end
     setObjectCamera(tag, "other")
+end
+
+-- https://github.com/ShadowMario/FNF-PsychEngine/issues/12755#issuecomment-1641455548
+function mouseOverlaps(tag)
+    addHaxeLibrary('Reflect')
+    return runHaxeCode([[
+        var obj = game.getLuaObject(']]..tag..[[');
+        if (obj == null) obj = Reflect.getProperty(game, ']]..tag..[[');
+        if (obj == null) return false;
+        return obj.getScreenBounds(null, obj.cameras[0]).containsPoint(FlxG.mouse.getScreenPosition(obj.cameras[0]));
+    ]])
 end
