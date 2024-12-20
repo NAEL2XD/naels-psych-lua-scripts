@@ -1,1 +1,0 @@
-That one GD where 5 of them spawn with random color, ya know that right?

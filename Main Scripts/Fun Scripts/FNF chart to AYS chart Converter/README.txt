@@ -1,1 +1,0 @@
-If you like Scratch FNF charts but hate the Scratch SSS converter being badly placed? Worry not because this script fixes it but now uses Psych Engine!

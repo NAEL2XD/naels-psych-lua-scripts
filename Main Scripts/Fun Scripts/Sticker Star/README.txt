@@ -1,1 +1,0 @@
-Like goofing around but don't know what to goof more? how about stickers, this should do it!

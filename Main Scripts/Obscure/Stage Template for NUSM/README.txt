@@ -1,1 +1,0 @@
-A template stage that was suppose to be used for NUSM, was scrapped and now obscured.
