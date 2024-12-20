@@ -17,7 +17,7 @@ Here are the previews of the scripts from **ME!**
 | Category | Script Name | Description | Video Link
 |----------|-------------|-------------|------------
 | EVENT | Rave Party | That one GD where 5 of them spawn with random color, ya know that right? | Not Found
-| Fun | Camera Moves From Mouse Pos | Just short one, but moves the camera by the mouse pos. You can even make it crazy with it. | Not Found
+| FUN | Camera Moves From Mouse Pos | Just short one, but moves the camera by the mouse pos. You can even make it crazy with it. | Not Found
 | FUN | Cheating Script but it's a lie | Just a cheating script, but it closes itself if timer has hit. | [Video Link](https://youtu.be/FP7_gSUGmeY?si=SYVXeZGjdm4cBO8I)
 | FUN | FNF chart to AYS chart Converter | If you like Scratch FNF charts but hate the Scratch SSS converter being badly placed? Worry not because this script fixes it but now uses Psych Engine! | Not Found
 | FUN | Less Lag for [JS Engine](https://github.com/JordanSantiagoYT/FNF-JS-Engine) | A script that asks the user if you wanna use less lag for [JS Engine](https://github.com/JordanSantiagoYT/FNF-JS-Engine) and have more performance. | Not Found
