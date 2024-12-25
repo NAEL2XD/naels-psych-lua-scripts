@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 function onCreate()
     for i=1,4 do
         makeLuaSprite("arm"..i, "", 0, 0)

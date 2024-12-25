@@ -16,10 +16,12 @@ Here are the previews of the scripts from **ME!**
 
 | Category | Script Name | Description | Video Link
 |----------|-------------|-------------|------------
+| CONVS | FNF to AYS | If you like Scratch FNF charts but hate the Scratch SSS converter being badly placed? Worry not because this script fixes it but now uses Psych. | Not Found
+| CONVS | FNF to GPOP | If you like GPOP but hate manually placing notes and being tired from it? Worry not! Since this turns FNF charts to GPOP but ACCURATE! (Note: does not support hold notes) | Not Found
+| CONVS | FNF to OSU | Is the PYTHON version of FNF to OSU really slow? Worry not since this script increases speed by a ton and you can use it on OSU! (Note: Importing does not work, you'll have to manually place it in osu/songs) | Not Found
 | EVENT | Rave Party | That one GD where 5 of them spawn with random color, ya know that right? | Not Found
 | FUN | Camera Moves From Mouse Pos | Just short one, but moves the camera by the mouse pos. You can even make it crazy with it. | Not Found
-| FUN | Cheating Script but it's a lie | Just a cheating script, but it closes itself if timer has hit. | [Video Link](https://youtu.be/FP7_gSUGmeY?si=SYVXeZGjdm4cBO8I)
-| FUN | FNF chart to AYS chart Converter | If you like Scratch FNF charts but hate the Scratch SSS converter being badly placed? Worry not because this script fixes it but now uses Psych Engine! | Not Found
+| FUN | Cheating Script but it's a lie | Just a cheating script, but it closes itself if timer has hit. | [Video Link](https://youtu.be/FP7_gSUGmeY?si=SYVXeZGjdm4cBO8I) | Not Found
 | FUN | Less Lag for [JS Engine](https://github.com/JordanSantiagoYT/FNF-JS-Engine) | A script that asks the user if you wanna use less lag for [JS Engine](https://github.com/JordanSantiagoYT/FNF-JS-Engine) and have more performance. | Not Found
 | FUN | Notes Remaining | Basically tracks on how much notes are left. Just simple. | Not Found
 | FUN | Playable Image | Make your image go move in place, but now it's UPDATED!! | [Video Link (From Jordan Santiago)](https://youtu.be/gp4bCDWrfcM?si=AYKff3hsrtLQeoOj)

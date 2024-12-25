@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 -- how much notes left
 
 local nC = 0
@@ -23,24 +26,10 @@ function onCreatePost()
     setProperty("a.y", 0)
 end
 
---[[function onSongStart()
-    for i=0, getProperty('unspawnNotes.length')-1 do
-        if (getPropertyFromGroup('unspawnNotes', i, 'mustPress') and not getPropertyFromGroup('unspawnNotes', i, 'isSustainNote')) then
-            nC = nC + 1
-        end
-    end
-end]]
-
 function onUpdate(elapsed)
     setTextString("a", (isPlayer and "Player's " or "Opponent's ").."Note Remaining: "..nC-(hits+misses).." | Notes Rendered: "..getProperty('notes.length'))
 end
 
----
---- @param membersIndex int
---- @param noteData int
---- @param noteType string
---- @param isSustainNote bool
----
 function noteMiss(membersIndex, noteData, noteType, isSustainNote)
     if isSustainNote then nC = nC + 1 end
 end

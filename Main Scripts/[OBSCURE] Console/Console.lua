@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 local textSpawn = 0
 local line = 0
 local colon = 0

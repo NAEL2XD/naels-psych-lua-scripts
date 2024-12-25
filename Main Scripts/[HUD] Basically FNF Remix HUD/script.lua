@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 -- SETTINGS!!
 local prefs = {
     laneUnderlay    = false,    -- enables focus mode (black overlay) in camHud making you see hud easier. automatically disables if using botplay

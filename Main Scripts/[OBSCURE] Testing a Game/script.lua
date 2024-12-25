@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 --[[ 
     GAME WAS MADE BY NAEL2XD!!
     Compatible with Psych 0.6.3!

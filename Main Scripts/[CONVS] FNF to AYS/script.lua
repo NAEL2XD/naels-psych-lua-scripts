@@ -1,3 +1,6 @@
+-- Made by Nael2xd (https://github.com/NAEL2XD/naels-psych-lua-scripts)
+-- Don't steal this! It's stupid if you did.
+
 local decimalDigits = 3          -- works best with 3, for spam stuff use 5-6
 local optimizeAys   = false       -- do you wanna optimize? or use the Sguiqqyl qdfmj i cant spell
 local doBoth        = false       -- converts both optimized and sss ays chart
